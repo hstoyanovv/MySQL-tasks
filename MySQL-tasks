@@ -1,0 +1,1268 @@
+
+--- задача от изпита юли
+нещо от рода да изкараш името на актрисите, годините на раждане сортирани, 
+и броя студия за тези актриси, които имат по-малко от 6 филма и нямат JR в името си.
+
+SELECT name, YEAR(birthdate), COUNT(DISTINCT studioName)
+FROM MovieStar
+LEFT JOIN StarsIn ON name = starname
+LEFT JOIN Movie ON movieTitle = title AND movieYear = year
+WHERE GENDER = 'F' and name not like '%JR%'
+GROUP BY name
+HAVING COUNT(title) < 6
+ORDER BY YEAR(birthdate);
+
+
+-----------------------
+От таблицата movies
+
+Задача 1. Напишете заявка, която извежда адресът на студио ‘MGM’.
+
+SELECT address FROM studio
+WHERE name = 'MGM';
+
+Задача 2. Напишете заявка, която извежда рождената дата на актрисата Sandra Bullock.
+
+SELECT BIRTHDATE FROM MOVIESTAR
+WHERE NAME = 'Sandra Bullock';
+
+Задача 3. Напишете заявка, която извежда имената на всички актьори, които са
+участвали във филм през 1980 в заглавието на които има думата ‘Love’.
+
+SELECT STARNAME FROM STARSIN
+WHERE MOVIEYEAR = 1980 AND MOVIETITLE LIKE '%Love%';
+
+Задача 4. Напишете заявка, която извежда имената на всички продуценти на
+филми на стойност над 10 000 000 долара.
+
+SELECT NAME
+FROM MOVIEEXEC
+WHERE NETWORTH > 10000000;
+
+Задача 5. Напишете заявка, която извежда имената на всички актьори, които са
+мъже или живеят в Malibu.
+
+---------------------------
+От таблицата ships
+
+Задача 1. Напишете заявка, която извежда името на класа и страната за всички
+класове с брой на оръдията по-малък от 10.
+
+SELECT CLASS,COUNTRY FROM CLASSES
+WHERE NUMGUNS < 10;
+
+Задача 2. Напишете заявка, която извежда имената на всички кораби, пуснати на
+вода преди 1918. Задайте псевдоним на колоната shipName.
+
+SELECT NAME as shipName FROM SHIPS
+WHERE LAUNCHED < 1918;
+
+Задача 3. Напишете заявка, която извежда имената на корабите потънали в битка
+и имената на битките в които са потънали.
+
+SELECT SHIP,BATTLE FROM OUTCOMES
+WHERE RESULT = 'sunk';
+
+Задача 4. Напишете заявка, която извежда имената на корабите с име съвпадащо
+с името на техния клас.
+
+SELECT NAME FROM SHIPS
+WHERE NAME = CLASS;
+
+Задача 5. Напишете заявка, която извежда имената на всички кораби започващи с
+буквата R.
+
+SELECT NAME FROM SHIPS
+WHERE NAME LIKE 'R%';
+
+Задача 6. Напишете заявка, която извежда имената на всички кораби, чието име е
+съставено от точно две думи. 
+
+SELECT NAME FROM SHIPS
+WHERE NAME LIKE '% %' AND NAME NOT LIKE '% % %'
+
+
+За таблицата PC
+
+Задача 1. Напишете заявка, която извежда номер на модел, честота и размер на диска за
+всички компютри с цена по-малка от 1200 долара. Задайте псевдоними за
+атрибутите честота и размер на диска, съответно MHz и GB.
+
+SELECT MODEL,SPEED as GHZ,HD as GB FROM PC
+WHERE PRICE < 1200
+
+Задача 2. Напишете заявка, която извежда всички производители на принтери без
+повторения
+SELECT DISTINCT MAKER FROM PRODUCT
+WHERE TYPE = 'Printer'
+
+Задача 3. Напишете заявка, която извежда номер на модел, размер на паметта, размер на
+екран за лаптопите, чиято цена е по-голяма от 1000 долара
+
+SELECT MODEL,RAM,SCREEN FROM LAPTOP
+WHERE PRICE > 1000
+
+Задача 4. Напишете заявка, която извежда всички цветни принтери
+SELECT * FROM PRINTER
+WHERE COLOR = 'y'
+
+Задача 5. • Напишете заявка, която извежда номер на модел, честота и размер на диска за
+тези компютри с DVD 12x или 16x и цена по-малка от 2000 долара. 
+SELECT MODEL,SPEED,HD FROM PC
+WHERE (CD = '12' OR CD = '16') AND PRICE < 2000
+
+---------------------
+Задачи за Join 
+Задача 1. Напишете заявка, която извежда имената на актьорите мъже участвали в ‘Terms
+of Endearment’ 
+
+SELECT NAME
+FROM MOVIESTAR , STARSIN
+WHERE NAME = STARNAME
+AND GENDER = 'M' AND MOVIETITLE = 'Terms of Endearment';
+
+Задача 2. Напишете заявка, която извежда имената на актьорите участвали във филми
+продуцирани от ‘MGM’през 1995 г. 
+
+SELECT STARNAME
+FROM STARSIN, MOVIE
+WHERE MOVIEYEAR = YEAR AND MOVIETITLE = TITLE AND STUDIONAME = 'MGM'
+AND YEAR = 1995;
+
+Задача 3. • Напишете заявка, която извежда името на президента на ‘MGM’ 
+SELECT NAME
+FROM MOVIE,MOVIEEXEC
+WHERE 'PRODUCERC#' = 'CERT#' AND STUDIONAME = 'MGM';
+
+Задача 4. Напишете заявка, която извежда имената на всички филми с дължина по-голяма
+от дължината на филма ‘Gone With the Wind’ 
+
+SELECT m1.TITLE
+FROM MOVIE m1, MOVIE m2 
+where m2.title='Gone With the Wind' and m1.year<>m2.year 
+and m1.title<>m2.title and m1.length > m2.length;
+
+//tuk poneje imame 2 obekta ot movie ne mojem da viknem za title,
+//zashtoto suvpadat i dava greshka zatva kazvame da sa razlichni neshtata.
+// <> oznachava not equal
+
+Задача 5. Напишете заявка, 
+която извежда имената на тези продукции на стойност поголяма 
+от продукциите на продуценти ‘Merv Griffin’ 
+select me1.NAME
+from movieexec me1, movieexec me2
+where me1.networth>me2.networth and me1.`cert#`<>me2.`cert#` and me2.name = 'Merv Griffin';
+
+// s formalnoto pisane
+select me1.NAME
+from movieexec me1 INNER JOIN movieexec me2 ON me1.`cert#`<>me2.`cert#`
+where me1.networth>me2.networth and me2.name = 'Merv Griffin';
+
+схема PC
+Задача 2. • Напишете заявка, която извежда номер на модел и цена на всички продукти,
+произведени от производител с име ‘B’ 
+
+select distinct p.model, l.price as Price
+from product p, laptop l
+where maker='B' and p.model=l.model
+
+union
+
+select distinct p.model, pc.price as Price, p.type
+from product p, pc
+where maker='B' and p.model=pc.model
+
+union
+
+select p.model, pr.price as Price, p.type
+from product p, printer pr
+where maker='B' and p.model=pr.model;
+
+Задача 3. Напишете заявка, която извежда размерите на тези дискове, които се предлагат в
+повече от два компютъра
+
+SELECT distinct pc1.hd
+FROM pc as pc1, pc as pc2
+WHERE pc1.hd = pc2.hd and pc1.model<>pc2.model
+
+//tuk polzvam distinct zashtoto moje 1 pc da e s ednakvi hardove kato 2 drugi,
+no s razlichni modeli i taka shte izkara 2 puti toq hard.
+
+Задача 5. Напишете заявка, която извежда производителите на поне два различни
+компютъра с честота поне 400. 
+
+SELECT distinct p.MAKER
+FROM PRODUCT p, PRODUCT p2,PC pc1, PC pc2
+WHERE p.model = pc1.model and p2.model = pc2.model and p.model<>p2.model and pc1.speed > 400
+and pc2.speed > 400;
+
+схема корабите
+
+Задача 3. Напишете заявка, която извежда имената на тези държави, които имат кораби от
+тип ‘bb’ и ‘bc’ едновременно
+
+SELECT c1.country
+from classes c1, classes c2
+where c1.country = c2.country and c1.type = "bb" and c2.type = "bc";
+
+
+Задача 2. Напишете заявка, която извежда имената, водоизместимостта и броя оръжия на
+всички кораби участвали в битката при ‘Guadalcanal’
+
+select s.name, c.displacement, c.numguns
+from ships s, classes c, outcomes o
+where o.battle='Guadalcanal' and o.ship=s.name and c.class=s.class;
+
+Задачи за подзаявки
+Използват се когато ми трябва резултат от друга таблица, т.е
+ако са продуценти еди какво си, първо трябва да проверя кои са продуцентите.
+
+Задача 1.
+Напишете заявка, която извежда имената на актрисите, които са също и
+продуценти с нетна стойност по-голяма от 10 милиона. 
+
+SELECT NAME
+FROM MOVIESTAR
+WHERE NAME IN (SELECT NAME 
+				FROM MOVIEEXEC WHERE NETWORTH > 10000000) 
+				AND GENDER = 'F';
+				
+
+Задача 2. Напишете заявка, която извежда имената на тези актьори (мъже и жени), които
+не са продуценти. 
+
+SELECT NAME
+FROM MOVIESTAR
+WHERE NAME NOT IN (SELECT NAME FROM MOVIEEXEC);
+
+Задача 3. Напишете заявка, която извежда имената на всички филми с дължина по-голяма
+от дължината на филма ‘Gone With the Wind’
+
+select title
+from movie 
+where length > ( select length
+		 from movie
+		 where title='Gone With the Wind');
+
+
+Задача 4. • Напишете заявка, която извежда името на филмите с най-голяма дължина по
+студио. 
+
+select title
+from movie m
+where length >= all (select length 
+		     from movie
+		     where studioname=m.studioname)
+
+От схемата за PC
+
+Задача 1. • Напишете заявка, която извежда производителите на персонални компютри с
+честота поне 500. 
+
+SELECT MAKER
+FROM PRODUCT
+WHERE MODEL IN (SELECT MODEL FROM PC WHERE SPEED >= 500);
+
+Задача 2.
+Напишете заявка, която извежда принтерите с най-висока цена. 
+
+SELECT * FROM PRINTER
+WHERE PRICE >= ALL(SELECT PRICE FROM PRINTER)
+
+Задача 3. Напишете заявка, която извежда лаптопите, чиято честота е по-ниска от
+честотата на който и да е персонален компютър. 
+
+SELECT * FROM LAPTOP
+WHERE SPEED < ANY (SELECT DISTINCT SPEED FROM PC)
+
+Задача 4.Напишете заявка, която извежда производителя на цветния принтер с най-ниска
+цена
+
+SELECT MAKER
+FROM PRODUCT
+WHERE MODEL IN (SELECT MODEL 
+				FROM PRINTER WHERE COLOR = 'Y' AND PRICE <= 
+				ALL(SELECT DISTINCT PRICE FROM PRINTER WHERE COLOR = 'Y');
+				
+Задача 5.Напишете заявка, която извежда производителите на тези персонални компютри
+с най-малко RAM памет, които имат най-бързи процесори.
+
+SELECT MAKER
+FROM PRODUCT
+WHERE MODEL IN (SELECT MODEL FROM PC p
+				WHERE RAM <= ALL(SELECT RAM FROM PC) 
+				AND SPEED >= (SELECT SPEED FROM PC WHERE RAM = p.RAM));
+				
+				
+Задачи с функции
+Зад 5. Да се напише заявка, която намира имената на служителя с най-висока заплата.
+
+SELECT FIRSTNAME,LASTNAME
+FROM EMPLOYEE
+WHERE SALARY = (SELECT MAX(SALARY) FROM EMPLOYEE)
+
+Зад 4. Да се напише заявка, която извежда номер на административен отдел, 
+име на административен отдел, номера и имена на подчинените му отдели 
+и броя на работещите служители за всеки един от подчинените му отдели, 
+за всички административни отдел без отдел с номер E01. 
+Ако в отделите няма нито един работещ служител да се изведе 0.
+
+Задачи за групиране
+
+Задача 1. Напишете заявка, която извежда средната честота на компютрите
+
+SELECT decimal(AVG(SPEED),9,2)
+FROM PC;
+
+Задача 2. Напишете заявка, която извежда средния размер на екраните на лаптопите за
+всеки производител
+
+SELECT p.MAKER,decimal(AVG(l.SCREEN),9,2) AS AVG_LEN
+FROM LAPTOP l join PRODUCT p
+on l.model = p.model
+GROUP BY p.MAKER;
+
+Задача 3. Напишете заявка, която извежда средната честота на лаптопите с цена над 1000 
+SELECT decimal(AVG(SPEED),9,2)
+FROM LAPTOP
+WHERE PRICE > 1000;
+
+Задача 4. • Напишете заявка, която извежда средната цена на компютрите произведени от
+производител ‘A’ 
+
+SELECT AVG(SPEED) as AVG_PRICE
+FROM PC pc join PRODUCT p on p.model = pc.model
+where p.maker = 'A'
+
+Задача 5. Напишете заявка, която извежда средната цена на компютрите и лаптопите за
+производител ‘B’ , тук ги извежда взети заедно
+
+SELECT AVG(l.PRICE) as LaptopPrice
+FROM LAPTOP l JOIN PRODUCT p ON l.model = p.model
+WHERE p.maker = 'B'
+
+Union
+
+SELECT AVG(pc.PRICE) as PCPrice
+FROM PC pc join PRODUCT p on pc.model = p.model
+where p.maker = 'B';
+
+Задача 6. Напишете заявка, която извежда средната цена на компютрите според
+различните им честоти
+
+SELECT SPEED, AVG(PRICE) AS AVG_PRICE
+FROM PC
+GROUP BY SPEED;
+
+Задача 7. • Напишете заявка, която извежда производителя, които е произвел поне 3
+различни модела компютъра
+
+select p.maker, count(p.model) as cnt
+from product p
+where p.type = 'PC'
+group by p.maker
+having count(p.model)>=3;
+
+Задача 9. Напишете заявка, която извежда средната цена на компютрите за всяка честота
+по-голяма от 800 
+
+SELECT AVG(pc.PRICE) as AVG_PRICE
+FROM pc
+WHERE SPEED > 800;
+
+Задача 10. Напишете заявка, която извежда средния размер на диска на тези компютри
+произведени от производители, които произвеждат и принтери
+
+select avg(hd) as AvgHDD
+from pc join product p on p.model=pc.model
+where p.maker in
+(select distinct maker
+from product
+where type='Printer');
+
+
+Схема за корабите
+Задача 1.Напишете заявка, която извежда броя на класовете кораби
+SELECT COUNT(CLASS) as ShipCount
+FROM classes;
+
+Задача 2. Напишете заявка, която извежда средния брой на оръжия, според класа на
+кораба
+
+SELECT CLASS,AVG(NUMGUNS) as AVG_GUNS
+FROM CLASSES
+GROUP BY CLASS;
+
+Задача 3. Напишете заявка, която извежда средния брой на оръжия за всички кораби
+SELECT AVG(NUMGUNS) as AVG_GUNS
+FROM CLASSES c join ships s on c.class = s.class
+
+Задача 4. Напишете заявка, която извежда за всеки клас първата и последната година, 
+-- в която кораб от съответния клас е пуснат на вода
+
+SELECT c.class,MIN(s.LAUNCHED),MAX(s.LAUNCHED)
+FROM classes c join ships s on c.class = s.class
+GROUP BY c.class;
+
+Задача 5. Напишете заявка, която извежда броя на корабите потънали в битка според
+класа
+
+SELECT COUNT(o.ship) as cnt
+FROM ships s join outcomes o on s.name = o.ship
+where o.result = 'sunk';
+GROUP BY s.class;
+
+Задача 6. Напишете заявка, която извежда броя на корабите потънали в битка според
+класа, за тези класове с повече от 2 кораба
+
+select class,count(name) as "Number of sunk ships"
+from ships s join outcomes o on s.name=o.ship
+where result='sunk' and class in (select c.class
+								  from classes c join ships s on c.class=s.class
+								  group by c.class
+								  having count(name)>2)
+group by class;
+
+Задача 7. Напишете заявка, която извежда средното тегло на корабите, за всяка страна. 
+SELECT  COUNTRY,AVG(DISPLACEMENT) AS AVG_WEIGHT
+FROM CLASSES c join ships s on s.class = c.class
+GROUP BY COUNTRY;
+
+// tuka e s join shtoto nqma korab v germaniq, a to q pokazva
+
+
+ЗАДАЧИ С ВСИЧКИТЕ JOIN
+
+Задача 1. Напишете заявка, която извежда името на продуцента и имената на филмите,
+продуцирани от продуцента на ‘Star Wars’ 
+
+select me.name, m.title
+from movie m join movieexec me on m.producerc#=me.cert# 
+where me.name in (select movieexec.name from movieexec join movie on
+						movie.producerc#=movieexec.cert# where movie.title = 'Star Wars');
+						
+Задача 2. Напишете заявка, която извежда имената на продуцентите на филмите на
+‘Harrison Ford’ 
+
+SELECT distinct me.name
+from movieexec me join movie m on m.producerc# = me.cert#
+join starsin s on m.title = s.movietitle
+where starname = 'Harrison Ford';
+
+Задача 3. Напишете заявка, която извежда името на студиото и имената на актьорите
+участвали във филми произведени от това студио, подредени по име на студио. 
+
+select s.name, st.starname
+from movie m join starsin st on m.title = st.movietitle
+join studio s on s.name = m.studioname
+order by s.name;
+
+Задача 4. Напишете заявка, която извежда имената на актьора (актьорите) участвали във
+филми на най-голяма стойност
+
+SELECT distinct s.starname 
+from movie m join movieexec me on me.`cert#` = m.`producerc#`
+join starsin s on m.title = s.movietitle
+where me.networth >= all (select networth from movieexec);
+
+Задача 5. Напишете заявка, която извежда имената на актьорите не участвали в нито един
+филм. (Използвайте съединение!) 
+
+select ms.name, si.movietitle
+from moviestar ms left join starsin si
+on ms.name=si.starname
+where si.movietitle is NULL;
+
+
+Задачи за PC
+Задача. Напишете заявка, която извежда производител, модел и тип на продукт за тези
+производители, за които съответния продукт не се продава (няма го в таблиците
+PC, лаптоп или принтер) 
+
+select p.*
+from product p left join pc on p.model=pc.model
+where type='PC' and code is NULL
+union
+select p.*
+from product p left join printer pp on p.model=pp.model
+where p.type='Printer' and code is NULL
+union
+select p.*
+from product p left join laptop l on p.model=l.model
+where type='Laptop' and code is NULL;
+
+
+Задачи за ships
+
+Задача 1.  Напишете заявка, която извежда цялата налична информация за всеки кораб,
+включително и данните за неговия клас. В резултата не трябва да се включват
+тези класове, които нямат кораби. 
+
+select * from
+ships s join classes c on s.class=c.class
+where s.name is not NULL;
+
+Задача 2. Повторете горната заявка като този път включите в резултата и класовете, които
+нямат кораби, но съществуват кораби със същото име като тяхното. 
+
+select * from
+ships s join classes c on s.class=c.class
+where s.name is not NULL and c.class in (select name from ships);
+
+Задача 3.За всяка страна изведете имената на корабите, които никога не са участвали в
+битка. 
+
+select c.country,s.name
+from ships s join classes c on s.class = c.class
+left join outcomes o on s.name = o.ship
+where o.ship is NULL
+order by c.country;
+
+
+---------------------------------------------------------------------------
+ЗАДАЧИ ОТ ДЪРЖАВНИТЕ ИЗПИТИ
+09.2019
+зад1. 
+Б)SELECT ME.NAME, M.YEAR, COUNT(*) AS CNT
+FROM MOVIEEXEC ME
+JOIN MOVIE M
+ON ME.CERT# = M.PRODUCERC#
+GROUP BY ME.CERT#, ME.NAME, M.YEAR;
+
+Зад 2. Да се напише заявка, която да изведе името на най-младата звезда (полът е без значение).
+SELECT NAME
+FROM MOVIESTAR
+WHERE BIRTHDATE >= ALL(SELECT BIRTHDATE FROM MOVIESTAR);
+
+
+07.2019
+a) отговор 
+C) SELECT S.NAME, COUNT(M.TITLE) as CNT
+FROM STUDIO S JOIN MOVIE M
+ON S.NAME = M.STUDIONAME
+GROUP BY S.NAME
+HAVING COUNT(M.TITLE) < 2;
+
+б)Да се напише заявка, която да изведе имената на всички продуценти 
+с минимален нетен актив.
+
+SELECT NAME
+FROM MOVIEEXEC 
+WHERE NETWORTH <= ALL(SELECT NETWORTH FROM MOVIEXEC);
+
+
+09.2018
+a) Да се напише заявка, която извежда име на клас, годината на първата битка, в която кораб на този
+клас е участвал, годината на последната битка, в която кораб на този клас е участвал, и броя на
+всички различни битки, в които кораби на този клас са участвали, само за тези класове, започващи с
+буквата N. Ако за даден клас няма кораб, който да е участвал в битка, за съответните години да се
+върне стойност null.
+
+SELECT c.class, MIN(s.launched),MAX(s.launched),COUNT(distinct o.battle) as CNT
+FROM classes c join ships s on c.class = s.class
+left join outcomes o on s.name = o.ship
+where c.class LIKE 'N%'
+group by c.class;
+
+б)Да се напише заявка, която да изведе имената на тези битки, за които броят на корабите от тип 'bb',
+участвали в тази битка, е по-голям от броя на корабите от тип 'bc', участвали в същата битка. Битки,
+в които не е участвал нито един кораб, да не се извеждат в резултата.
+
+select o.battle
+from classes c join ships s on c.class = s.class
+join outcomes o on s.name = o.ship
+group by o.battle
+having count(s.name in (select s1.name from ships s1 join classes c1 where c1.type = "bb" )) > 
+count(s.name in (select s1.name from ships s1 join classes c1 where c1.type = "bc" ));
+
+
+07.2018
+1)Да се напише заявка, която да изведе име на студио, годината на първия филм за това студио,
+годината на последния филм за това студио и броя на всички филми за това студио, само за тези
+студиа, чиито имена започват с буквата ‘M’.
+
+SELECT m.studioname,MIN(m.YEAR),MAX(m.YEAR),COUNT(m.title)
+from movie m
+where m.studioname like '%M'
+group by m.studioname;
+
+2)Да се напише заявка, която да изведе името на актрисата, участвала в най-много филми, и броя на
+филмите, в които е участвала.
+
+!!!VAJNA
+
+SELECT NAME, COUNT(*)
+FROM STARSIN, MOVIESTAR
+WHERE NAME = STARNAME 
+AND GENDER = 'F' 
+GROUP BY NAME 
+HAVING COUNT(*) >= ALL (SELECT COUNT(*) 
+                        FROM STARSIN, MOVIESTAR 
+                        WHERE NAME = STARNAME AND GENDER = 'F' 
+                        GROUP BY NAME); 
+						
+УТОЧНЕНИЯ: 
+ТОВА ИЗКАРВА ВСИЧКИ РЕДОВЕ ЗА 1 ИМЕ,COUNT(*) ТИ ВРЪЩА БРОЯ РЕДОВЕ
+SELECT NAME, COUNT(*)
+FROM STARSIN, MOVIESTAR
+WHERE NAME = STARNAME 
+AND GENDER = 'F'  
+GROUP BY NAME - ТОВА ЗА ВСИЧКИ ЖЕНИ ГО ПРАВИ ГРУПИРА ГИ
+
+ТОВА Е ПРОВЕРКАТА ДАЛИ РЕДА НА ЕДНАТА Е ПО-ГОЛЯМ ОТ НА ВСИЧКИ ОСТАНАЛИ ПО ОТДЕЛНО.
+HAVING COUNT(*) >= ALL (SELECT COUNT(*) 
+                        FROM STARSIN, MOVIESTAR 
+                        WHERE NAME = STARNAME AND GENDER = 'F' 
+                        GROUP BY NAME); 
+						
+09.2017
+1) Заявката да изведе име и държава на корабите,
+които никога не са потъвали в битка (може и да не са участвали).
+
+SELECT name, country 
+from ships left join outcomes on s.name = o.ship
+join classes c on c.class = s.class
+where o.result <> 'sunk'
+
+
+2)заявката да изведе име, водоизместимост и брой
+оръдия на най-леките кораби с най-много оръдия.
+
+SELECT name,displacement,numguns
+from classes c join ships s on s.class = c.class
+where displacement = (select MIN(displacement) from classes)
+AND numguns = (select MAX(NUMGUNS) from classes c1 where c1.class = c.class)
+
+3)Заявката да изведе име на битките, в които е
+участвал един кораб.
+
+SELECT BATTLE, SHIP
+ FROM OUTCOMES O1
+ WHERE EXISTS (SELECT *
+                     FROM OUTCOMES O2
+                     WHERE O1.SHIP = O2.SHIP
+                     AND   O1.BATTLE <> O2.BATTLE);
+					 
+07.2017
+
+1)заявката да изведе за всяко студио името на
+студиото, заглавието и годината на филма, излязъл последно на екран за това студио.
+
+SELECT studioname,title,year
+from movie m
+where year = (select max(year) from movie where studioname = m.studioname)
+
+2)заявката да изведе име на продуцент и обща
+дължина на продуцираните от него филми, 
+за тези продуценти, които имат поне един филм преди 1980 г.
+
+ SELECT NAME, SUM(LENGTH) AS SUM_LEN
+ FROM MOVIEEXEC JOIN MOVIE ON PRODUCERC#=CERT#
+ GROUP BY NAME
+ HAVING MIN(YEAR) < 1980;
+ 
+3)заявката да изведе име на актьорите, участвали
+във филми на продуценти с най-големи нетни активи, както и заглавие на филмите, 
+в които са участвали, име на продуцент и нетни активи.
+
+
+
+
+09.2016
+1)​Да се посочи заявката, която извежда всички държави, които имат поне един кораб, участвал в
+битка, както и броя на потъналите кораби за всяка от държавите.
+Б)
+ SELECT C.COUNTRY, COUNT (O.RESULT)
+ FROM CLASSES C JOIN SHIPS S
+ ON C.CLASS = S.CLASS
+ JOIN OUTCOMES O ON  S.NAME = O.SHIP
+ WHERE RESULT = 'sunk'
+ GROUP BY C.COUNTRY;
+ 
+2) ​Да се посочи заявката, която извежда имената на битките, които са по-мащабни (с кораби от повече
+държави) от битката в Коралово море (Coral Sea).
+А) SELECT DISTINCT battle
+FROM outcomes o1
+WHERE
+(SELECT COUNT(DISTINCT country)
+FROM outcomes o,ships s,classes c
+WHERE o.ship=s.name AND s.class=c.class AND battle=o1.battle)
+>
+(SELECT count(DISTINCT country)
+FROM outcomes o,ships s,classes c
+WHERE o.ship=s.name AND s.class=c.class AND battle='Coral Sea')
+
+07.2016
+
+1) ​Да се посочи заявката, която извежда името на продуцента и имената на филмите,
+продуцирани от продуцента на 'Pretty Woman'. Възможно е името на продуцента на филма да
+не е известно.
+A)
+SELECT t.name,title
+FROM movie m JOIN(SELECT name,cert#
+				FROM movieexec
+				WHERE cert#IN(SELECT producerc#
+							 FROM movie
+							WHERE title='PrettyWoman'))t
+ON m.producerc#=t.cert#;
+
+tva e moe reshenie
+SELECT name,title
+from movieexec join movie on cert# = producerc#
+where name = (select name from movieexec join movie on cert#=producerc#
+					where title = 'Pretty Woman')
+
+2)​Да се посочи заявката, която за актьорите, участвали в най­много филми на съответното
+студио, извежда име на студио, име на актьор и брой филми, в които е участвал актьорът. В
+резултата не​трябва да се включват филми, за които името на студиото не е известно.
+
+Г)
+SELECT studioname,starname,COUNT(*)
+FROM movie m JOIN starsin ON title = movie title AND year = movieyear
+
+WHERE studioname IS NOT NULL
+GROUP BY studioname,starname
+HAVING COUNT(*)>=ALL(SELECT COUNT(*)
+						FROM movie,starsin
+						WHERE title = movietitle
+							AND year = movieyear
+							AND studioname = m.studioname
+						GROUP BY studioname,starname);
+						
+						
+						
+ЗАДАЧИ ОТ МОЕТО КОНТРОЛНО БЕЙБИ
+
+Задача 1.Напишете заявка, 
+която извежда име на студио и брой на актьорите участвали 
+във филми създадени от това студио.
+
+select m.studioname , count(distinct starname) as cnt
+from movie m join starsin s on m.title = s.movietitle and m.year = s.movieyear
+group by m.studioname
+
+
+Задача 2.
+Напишете заявка, която извежда името на този актьор, 
+който е участвал във филми продуцирани от продуцент 
+с най-ниски приходи от продукции (netwoth)
+
+select s.starname
+from movie m join starsin s on m.title = s.movietitle and m.year = s.movieyear
+where m.title in (select title from movie join movieexec on `producerc#` = `cert#`
+					where networth <= all(select networth from movieexec));
+					
+Задача 3.
+Напишете заявка, която извежда име на актьор, 
+адрес на актьор и заглавие на филм, 
+за тези филми създадени след 1990 г. и име на актьор започващо с ‘J’.
+
+select name,address,movietitle
+from starsin join moviestar on starname = name
+where movieyear > 1990 and name like 'J%';
+
+Задача 4.
+Напишете заявка, която извежда име на актьор и име на студио, 
+за тези актьори участвали в най-малко филми на това студио.
+
+select starname,studioname,count(movietitle)
+from movie join starsin on movietitle = title and movieyear = year
+group by starname // TUK COUNT(MOVIETITLE) POKAZVA V KOLKO FILMA E IGRAL AKTIORA.
+
+select starname,studioname,count(movietitle)
+from movie join starsin on movietitle = title and movieyear = year
+group by starname
+having count(movietitle) <= all(select count(movietitle)
+								from movie join starsin on movietitle = title and movieyear = year
+								group by starname)
+								
+								
+Задача 5.
+Напишете заявка, която за всяко студио извежда името на студиото 
+и името на филма излязъл последно на екран за това студио.
+
+select studioname,title
+from movie m
+where year >= all(select year from movie m1 where m1.studioname = m.studioname)
+group by studioname;
+
+Задача 6.
+Напишете заявка, която извежда името на продуцента и името на филма 
+продуциран от този продуцент, за този филм, в който са участвали най-много мъже.
+
+select me.name,m.title
+from movie m join movieexec me on me.`cert#` = m.`producerc#`
+join starsin s on movietitle = title join moviestar ms on ms.name = s.starname
+where ms.gender = 'M'
+having count(movietitle) >= all(select count(movietitle)
+								from movie m1 join movieexec me1 on me1.`cert#` = m1.`producerc#`
+								join starsin s1 on s1.movietitle = m1.title join moviestar ms1 on ms1.name = s1.starname
+								where ms1.gender = 'M');
+
+ЗАДАЧИТЕ НА РЕНКА
+
+Задача 1.
+Напишете заявка, която извежда име на актьор и име на студио, 
+за тези актьори участвали в най-много филми на това студио.
+
+select s.starname,m.studioname
+from movie m join starsin s on m.title = s.movietitle and m.year = s.movieyear
+group by s.starname
+having count(m.title) >= all(select count(title)
+							from movie join starsin on title = movietitle and year = movieyear
+							group by studioname)
+							
+							
+Задача 2.
+Напишете заявка, която за всеки актьор извежда име на актьор 
+и броя на филмите, в които актьора е участвал.
+
+select starname, count(movietitle)
+from starsin
+group by starname;
+
+Задача 3.
+Напишете заявка, която да извежда име на актьорите, 
+участвали във филми на продуценти с най-големи нетни активи, 
+както и заглавие на филмите, в които са участвали, име на продуцент и нетни активи.
+
+select s.starname, s.movietitle, me.name, me.networth
+from movie m join starsin s on m.title = s.movietitle and m.year = s.movieyear
+join movieexec me on m.producerc# = me.cert#
+where me.networth >= all(select networth from movieexec);
+
+Задача 4.
+Напишете заявка, която за всяко студио извежда името на студиото 
+и името на филма излязъл първо на екран за това студио.
+
+select m.studioname, m.title
+from movie m 
+where year <= all(select year from movie m1 where m1.studioname = m.studioname)
+group by m.studioname;
+
+Задача 5.
+Напишете заявка, която извежда име на студио, адрес на студио, 
+дължина и заглавие на филм, за тези филми създадени след 1990 г.
+и име на студио започващо с ‘F’.
+ 
+select studioname,address , length, title
+from movie join studio on studioname = name
+where year >= 1990 and studioname like 'F%';
+
+Задача 6.
+Напишете заявка, която да извежда името на продуцента, 
+заглавието и годината на всички филми, продуцирани от 
+продуцента на филма ‘Interstellar’.
+
+select name,title,year
+from movie join movieexec on producerc# = cert#
+where name in (select name from movie join movieexec on cert# = producerc#
+				where title = 'Interstellar');
+				
+				
+	
+ЗАДАЧИТЕ ОТ ДЪРЖАВНИТЕ ИЗПИТИ МОИ РЕШЕНИЕ ОТ ИЦКО МРЪСНОТО ПРО
+
+Напишете името на актрисите, годините на раждане сортирани, 
+и броя студия за тези актриси, които имат по-малко от 6 филма и нямат JR в името си.
+
+select name, year(birthdate) as age,count(studioname)
+from movie join starsin on movietitle = title and movieyear = year
+join moviestar on starname = name
+where gender = 'F' and name not like '%JR%'
+group by name
+having count(movietitle) <= 6
+order by age;
+
+
+Задача 09.2019
+
+Да се огради буквата на заявката, която извежда за всеки продуцент името му 
+и броя на филмите му по години. Продуценти, които нямат нито един филм
+НЕ трябва да присъстват в резултатното множество.
+
+select distinct name ,year, count(title)
+from movie join moviexec on producerc# = cert#
+group by year, name;
+
+b)
+SELECT NAME, BIRTHDATE
+FROM MOVIESTAR
+WHERE BIRTHDATE >= ALL (SELECT BIRTHDATE FROM MOVIESTAR);
+
+Задача 07.2019
+Да се огради буквата на заявката, която извежда име на студио и 
+броя на филмите му, за тези студия с по-малко от два филма. 
+Студиата, които нямат нито един филм, НЕ трябва да присъстват в резултата.
+
+select studioname, count(title)
+from movie
+group by studioname
+having count(title) < 2;
+
+b)
+Да се напише заявка, която да изведе имената на всички продуценти 
+с минимален нетен актив.
+
+select name
+from movieexec
+where networth <= all (select networth from movieexec);
+
+Задача 09.2018
+Да се напише заявка, която извежда име на клас, годината на първата битка, 
+в която кораб на този клас е участвал, годината на последната битка, 
+в която кораб на този клас е участвал, и броя на всички различни битки, 
+в които кораби на този клас са участвали, само за тези класове, започващи с
+буквата N. Ако за даден клас няма кораб, който да е участвал в битка, 
+за съответните години да се върне стойност null.
+
+select class , MIN(year(date)) as firstYear , MAX(year(date)) as LastYear, count(distinct b.name)
+from ships s left join outcomes o on s.name = o.ship
+left join battles b on battle = b.name
+where class like 'N%'
+group by class;
+
+b)
+Да се напише заявка, която да изведе имената на тези битки, за които броят на корабите 
+от тип 'bb', участвали в тази битка, е по-голям от броя на корабите от тип 'bc', 
+участвали в същата битка. Битки, в които не е участвал нито един кораб, 
+да не се извеждат в резултата.
+
+select t1.battle
+from 
+(select o.battle, count(s.name) as cnt_bb // tva izvejda broq na korabite 'bb' po bitki
+	from classes c join ships s on c.class = s.class
+			join outcomes o on s.name = o.ship
+			where c.type = 'bb'
+			group by o.battle) t1
+join
+(select o.battle, count(s.name) as cnt_bc // tva izvejda broq na korabite 'bc' po bitki
+	from classes c join ships s on c.class = s.class
+			join outcomes o on s.name = o.ship
+			where c.type = 'bc'
+			group by o.battle) t2
+on t1.battle = t2.battle
+where t1.cnt_bb > t2.cnt_bc;
+
+
+
+Задача 07.2018
+Да се напише заявка, която да изведе име на студио, годината на първия филм 
+за това студио, годината на последния филм за това студио и броя на всички филми 
+за това студио, само за тези студиа, чиито имена започват с буквата ‘M’.
+
+select studioname, MIN(year),MAX(year), count(title)
+from movie
+where studioname like '%M'
+group by studioname;
+
+b)
+Да се напише заявка, която да изведе името на актрисата, 
+участвала в най-много филми, и броя на филмите, в които е участвала.
+
+select name, count(movietitle)
+from moviestar join starsin on starname = name
+where gender = 'F'
+group by name
+having count(movietitle) >= all (select count(movietitle)
+							from moviestar join starsin on starname = name
+							where gender = 'F'
+							group by name)
+
+
+Задача 09.2017
+1)Попълнете липсващите части, обозначени с ______ така, че заявката да изведе 
+име и държава на корабите, които никога не са потъвали в битка 
+(може и да не са участвали).
+
+select s.name, c.country
+from classes c join ships s on c.class = s.class join outcomes on s.name = ship
+where result <> 'sunk';
+
+2)Попълнете липсващите части, обозначени с ______ така, 
+че заявката да изведе име, водоизместимост и брой
+оръдия на най-леките кораби с най-много оръдия.
+
+//tva e umno
+SELECT NAME, DISPLACEMENT, NUMGUNS
+FROM CLASSES C JOIN SHIPS S ON S.CLASS=C.CLASS
+WHERE DISPLACEMENT = (SELECT MIN(DISPLACEMENT)
+                      FROM CLASSES)
+AND NUMGUNS = (SELECT MAX(NUMGUNS)
+               FROM CLASSES C1
+               WHERE C1.CLASS=C.CLASS);
+			   
+3) Попълнете липсващите части, обозначени с ______ така, 
+че заявката да изведе име на битките, в които е участвал един кораб.
+
+SELECT BATTLE, SHIP
+FROM OUTCOMES O1
+WHERE EXISTS (SELECT *
+                     FROM OUTCOMES O2
+                     WHERE O1.SHIP = O2.SHIP
+                     AND   O1.BATTLE <> O2.BATTLE);
+					 
+4)
+Да се посочи заявката, която извежда име на класа и брой на потъналите 
+в битка кораби за съответния клас, за тези класове с повече от 5 кораба.
+
+SELECT class, COUNT(DISTINCT name)
+FROM ships s JOIN outcomes o ON s.name=o.ship
+WHERE result='sunk' AND class IN (SELECT c.class
+
+FROM classes c JOIN ships s ON c.class=s.class
+GROUP BY c.class
+HAVING COUNT(name)>5)
+GROUP BY class;
+
+--07.2017
+
+1)--че заявката да изведе за всяко студио името на
+студиото, заглавието и годината на филма, излязъл последно на екран за това студио.
+
+select studioname, title ,year
+from movie
+where year >= all(select year from movie)
+
+2)--заявката да изведе име на продуцент и обща
+дължина на продуцираните от него филми, за тези продуценти, 
+които имат поне един филм преди 1980 г.
+
+select name,sum(length)
+from movieexec join movie on cert# = producerc#
+where name in (select name,sum(length)
+				from movieexec join movie on cert# = producerc# 
+				where year < 1980)
+group by name
+
+3)--заявката да изведе име на актьорите, участвали
+във филми на продуценти с най-големи нетни активи, както и заглавие на филмите, 
+в които са участвали, име на продуцент и нетни активи.
+
+select s.starname,s.movietitle,me.name,me.networth
+from movieexec me join movie m on me.`cert#` = m.`producerc#`
+join starsin s on m.title = s.movietitle
+where networth >= all(select networth from movieexec);
+
+4)--Заградете буквата на заявката, която извежда името на продуцента, 
+заглавието и годината на всички филми,
+продуцирани от продуцента на филма ‘Interstellar’.
+
+select name,title,year
+from movieexec join movie on cert# = producerc#
+where name in (select name from movieexec join movie on cert# = producerc#
+					where title = 'Interstellar');
+					
+					
+
+
+09.2016
+1).​Да се посочи заявката, която извежда всички държави, 
+които имат поне един кораб, участвал в
+битка, както и броя на потъналите кораби за всяка от държавите.
+
+SELECT DISTINCT c.country, (SELECT COUNT(o.result)
+
+							FROM classes c1 JOIN ships s
+							ON c1.class=s.class
+							JOIN outcomes o ON s.name=o.ship
+							WHERE result='sunk'
+							AND c1.country=c.country)
+
+FROM classes c;
+
+2)​Да се посочи заявката, която извежда имената на битките, 
+които са по-мащабни (с кораби от повече
+държави) от битката в Коралово море (Coral Sea).
+
+select o.battle
+from classes c join ships s on c.class = s.class
+join outcomes o on s.name = o.ship
+group by o.battle
+having count(distinct c.country) > (select count(distinct country)
+							from classes c1 join ships s1 on c1.class = s1.class
+								join outcomes o1 on s1.name = o1.ship
+								where o.battle = 'Coral Sea');
+								
+// tova sushto e variant
+SELECT DISTINCT battle
+FROM outcomes o1
+WHERE
+(SELECT COUNT(DISTINCT country)
+FROM outcomes o,ships s,classes c
+WHERE o.ship=s.name AND s.class=c.class AND battle=o1.battle)
+>
+(SELECT count(DISTINCT country)
+FROM outcomes o,ships s,classes c
+WHERE o.ship=s.name AND s.class=c.class AND battle='Coral Sea')
+
+07.2016
+
+1)Да се посочи заявката, която извежда името на продуцента и имената на филмите,
+продуцирани от продуцента на 'Pretty Woman'. Възможно е името на 
+продуцента на филма да не е известно.
+
+select me.name, m.title
+from movie m join movieexec me on me.`cert#` = m.`producerc#`
+where me.name in (select name from movie join movieexec on `cert#` = `producerc#`
+						where title = 'Pretty Womam');
+						
+						
+2)​Да се посочи заявката, която за актьорите, участвали в най­много филми на 
+съответното студио, извежда име на студио, име на актьор и брой филми, 
+в които е участвал актьорът. В резултата не​трябва да се включват филми, 
+за които името на студиото не е известно.
+
+select m.studioname,s.starname,count(s.movietitle)
+from movie m join starsin s on m.title = s.movietitle and m.year = s.movieyear
+group by m.studioname,s.starname
+having count(s.movietitle) >= all(select count(s1.movietitle)
+									from movie m1 join starsin s1 on m1.title = s1.movietitle and m1.year = s1.movieyear
+									where m1.studioname = m.studioname
+									group by m1.studioname,s1.starname
+									);
+									
+09.2015
+1​.​Да се посочи заявката, която извежда имената и адресите на всички актриси от
+София, както и на всички филмови студиа от София. Резултатите да са сортирани 
+по адрес.
+
+select T.name,T.address
+from
+(select name,address
+	from moviestar
+    where gender = 'F'
+    UNION
+    select name,address
+    from studio) T
+    where T.address like '%Sofia%'
+    ORDER BY T.address
+
+2)2​.​Да се посочи заявката, която за всяко студио с най­много три черно­бели филма
+извежда името му, адреса и средната дължина на филмите (без значение дали са цветни)
+на това студио. Студиа без филми също да се извеждат.
+
+select name,address,avg(length)
+from studio left join movie on name = studioname
+where name not in (select studioname
+				from movie 
+				where inColor = 'n'
+				group by studioname
+				having count(*) > 3) // ako tuka e <= i gore in to shte izkara tiq koito imat pone 1 cherno bql
+									// no moje da imame i 0 koeto ni udovletvorqva
+group by name,address;
+
+07.2015
+
+1)Да се посочи заявката, която извежда имената на всички филмови звезди, 
+чието име не завършва
+на “а” и са играли както в цветни, така и в черно­бели филми.
+
+// tova mu e sintaksisa na toq intersect samo sled where
+SELECT starName
+FROM StarsIn
+JOIN Movie ON movieTitle = title AND movieYear = year
+WHERE starName NOT LIKE '%a' AND inColor = 'y'
+INTERSECT
+SELECT starName
+FROM StarsIn
+JOIN Movie ON movieTitle = title AND movieYear = year
+WHERE inColor = 'n';
+
+2)Посочете заявката, която извежда за всяка филмова звезда, играла в най­много 5 филма,
+следната информация:
+­ име;
+­ рождена година;
+­ брой студиа, с които е работила.
+Ако за дадена звезда няма информация в какви филми е играла, 
+за нея също да се извежда ред (с брой студиа, равен на 0).
+
+select name,year(birthdate),count(distinct studioname)
+from moviestar left join starsin on name = starname
+left join movie on title = movietitle and year = movieyear
+group by name
+having count(movietitle) < 6;
+
+09.2010
+1)Да се посочи заявката, извеждаща всички актриси, които не са играли в нито един
+филм с име, започващо с буквата А. Актриси, за които в базата от данни 
+няма информация за техните участия, също трябва да бъдат изведени.
+
+select distinct name
+from moviestar left join starsin on starname = name
+where movietitle not in (select movietitle from starsin where movietitle like 'A%')
+and gender = 'F';
+
+2)Да се посочи заявката, която за всяка филмова звезда (без значение от пола), родена
+преди 1990 г., извежда възрастта, на която е играла за първи път във филм. 
+Звезди, за които няма информация за техните участия във филми,
+не трябва да бъдат извеждани.
+
+select name ,(MIN(movieyear) - year(birthdate)) // godinite na koito e bila v purviq si film
+from moviestar join starsin on name = starname
+where year(birthdate) < 1990
+group by name;
+
+
+07.2010
+Посочете заявката, която извежда всички държави, които имат както класове кораби с
+по-малко от 9 оръдия (numguns), така и класове кораби с над 12 оръдия
+
+select distinct c1.country
+from classes c1 join classes c2 on c1.country = c2.country
+where c1.numguns < 9 and c2.numguns > 12;
+
+2)Посочете заявката, която за всяка държава, участвала в не повече от 3 битки, 
+извежда името й и броя битки, в които е участвала. 
+Ако дадена държава няма нито един кораб или не е 
+участвала в нито една битка, за нея да извежда 0.
+
+select c.country, count(battle)
+from classes c left join ships on c.class = s.class
+left join outcomes o on s.name = o.ship
+group by c.country
+having count(battle) <= 3;
+
+
+
+Задача държавен на СИ
+1) Да се напише заявка, която извежда имената и рожденните дати на всички филмови
+звезди, чието име не съдържа 'JR' и са играли в поне един цветен филм. 
+Първо да се изведат най-младите звезди, 
+а звезди родени на една и съща дата да се изведат по азбучен ред.
+
+select distinct name, birthdate
+from moviestar join starsin on name = starname
+join movie on movietitle = title
+where name not like '%JR%'
+and incolor = 'y'
+order by birthdate,name;
+
+
+2) Да се напише заявка, която извежда следната инфо за всяка актриса,участвала
+в най-много 6 филма
+-име
+-рожденна година
+-брой различни студиа , с които е работила
+Ако за дадена актриса няма информацията в какви филми е играла, за нея също
+да се изведе ред с горната информация, като за брой студиа се изведе 0.
+
+select name,year(birthdate),count(distinct studioname)
+from moviestar left join starsin on name = starname
+left join movie on movietitle = title and movieyear = year
+where gender = 'F'
+group by name
+having count(studioname) < 7;
+
+
+/*Да се посочи заявката, която извежда име на класа и брой на потъналите в битка кораби за съответния клас, за
+тези класове с повече от 5 кораба.*/
+
+SELECT class, COUNT(DISTINCT name)
+FROM ships s JOIN outcomes o ON s.name=o.ship
+WHERE result='sunk' AND class IN 
+(SELECT c.class
+FROM classes c JOIN ships s ON c.class=s.class
+GROUP BY c.class
+HAVING COUNT(name)>5)
+GROUP BY class;
