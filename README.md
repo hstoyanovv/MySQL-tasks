@@ -1,2 +1,2 @@
-# MySQL-tasks
+# MySQL-tasks, FMI
 Some MySQL tasks,FMI
